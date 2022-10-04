@@ -1,0 +1,4 @@
+default.json
+production.json
+node_modules/
+.env
