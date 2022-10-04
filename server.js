@@ -6,6 +6,11 @@ const apiProfileRoute = require('./routes/profile');
 const apiPostsRoute = require('./routes/posts');
 const path = require('path');
 
+const cors = require('cors');
+const corsOptions = {
+	origin: ['http://localhost:3000', 'https://curious-gnome-19dde0.netlify.app'],
+};
+
 const app = express();
 
 // connect database
@@ -14,7 +19,7 @@ connectDB();
 // init middleware
 
 app.use(express.json({ extended: false }));
-
+app.use(cors(corsOptions));
 //Define Routes
 
 app.use(apiUserRoute);
