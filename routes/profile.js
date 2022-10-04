@@ -1,13 +1,9 @@
 const express = require('express');
-const config = require('config');
 const axios = require('axios');
 const auth = require('../middleware/auth');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 const router = express.Router();
-// const ghId = config.get('githubClientId');
-// const ghCs = config.get('githubClientSecret');
-// const ghToken = config.get('githubToken');
 const { Octokit } = require('octokit');
 
 const octokit = new Octokit();
@@ -251,24 +247,9 @@ router.post('/api/profile/me/education/:_id', auth, async (req, res) => {
 
 router.get('/api/profile/github/:username', async (req, res) => {
 	try {
-		// changes to github api access no longer require personal token auth
-		// octokit is now the way to access the api
-		// const uri = encodeURI(
-		// 	`https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc`
-		// );
-		// const headers = {
-		// 	'user-agent': 'node.js',
-		// 	Authorization: `token ${ghToken}`,
-		// };
-		//const githubResponse = await axios.get(uri, { headers });
-
-		// new octokit integration...
-
 		const githubResponse = await octokit.request(
 			`GET /users/${req.params.username}/repos?per_page=5&sort=created:asc`
 		);
-		console.log(githubResponse);
-
 		return res.json(githubResponse.data);
 	} catch (e) {
 		console.error(e.message);
