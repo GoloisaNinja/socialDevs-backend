@@ -5,9 +5,9 @@ const auth = require('../middleware/auth');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 const router = express.Router();
-const ghId = config.get('githubClientId');
-const ghCs = config.get('githubClientSecret');
-const ghToken = config.get('githubToken');
+// const ghId = config.get('githubClientId');
+// const ghCs = config.get('githubClientSecret');
+// const ghToken = config.get('githubToken');
 const { Octokit } = require('octokit');
 
 const octokit = new Octokit();
