@@ -4,9 +4,17 @@ const auth = require('../middleware/auth');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 const router = express.Router();
-const { Octokit } = require('octokit');
+const { Octokit } = require('@octokit/core');
 
-const octokit = new Octokit();
+const { createOAuthAppAuth } = require('@octokit/auth-oauth-app');
+
+const octokit = new Octokit({
+	authStrategy: createOAuthAppAuth,
+	auth: {
+		clientId: process.env.REACT_APP_GITHUB_CLIENT_ID,
+		clientSecret: process.env.REACT_APP_GITHUB_CLIENT_SECRET,
+	},
+});
 
 router.get('/api/profile/me', auth, async (req, res) => {
 	const user = await req.user;
@@ -248,12 +256,16 @@ router.post('/api/profile/me/education/:_id', auth, async (req, res) => {
 router.get('/api/profile/github/:username', async (req, res) => {
 	try {
 		const githubResponse = await octokit.request(
-			`GET /users/${req.params.username}/repos?per_page=5&sort=created:asc`
+			`GET /users/${req.params.username}/repos?per_page=5&sort=created:asc`,
+			{
+				client_id: process.env.REACT_APP_GITHUB_CLIENT_ID,
+				access_token: process.env.REACT_APP_GITHUB_TOKEN,
+			}
 		);
 		return res.json(githubResponse.data);
 	} catch (e) {
 		console.error(e.message);
-		res.status(404).json({ msg: 'No Github Profile Found...' });
+		res.status(404).json({ msg: e.message });
 	}
 });
 
