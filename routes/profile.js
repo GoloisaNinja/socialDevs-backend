@@ -98,9 +98,14 @@ router.post('/api/profile', auth, async (req, res) => {
 router.get('/api/profiles', async (req, res) => {
 	try {
 		const profiles = await Profile.find().populate('owner', ['name', 'avatar']);
-		res.status(200).send(profiles);
+		if (profiles.length > 0) {
+			return res.status(200).send(profiles);
+		}
+		return res
+			.status(404)
+			.send({ msg: 'Sorry...no profiles exist. Sign up and be the first!' });
 	} catch (e) {
-		res.status(500).send(e.message);
+		res.status(500).send({ msg: e.message });
 	}
 });
 
